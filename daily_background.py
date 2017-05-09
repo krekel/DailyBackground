@@ -1,10 +1,13 @@
 #! /usr/bin/env python3
-import requests
-import praw
-import credentials as c
+import getpass
 import os
 import re
-import getpass
+import subprocess
+
+import praw
+import requests
+
+import credentials as c
 
 
 def main():
@@ -34,13 +37,22 @@ def main():
     image = requests.get(url).content
 
     # TODO add image extension to title
-    # if image.startswith(b'FF\D8')
 
     with open(file_path + title, 'wb') as f:
         f.write(image)
 
+    set_envir()
+
     os.system("gsettings set org.gnome.desktop.background picture-uri "
               "file:///home/" + getpass.getuser() + "/Pictures/reddit_wp/" + title)
+
+
+# https://askubuntu.com/questions/483687/editing-gsettings-unsuccesful-when-initiated-from-cron
+def set_envir():
+    pid = subprocess.check_output(["pgrep", "gnome-session"]).decode("utf-8").strip()
+    cmd = "grep -z DBUS_SESSION_BUS_ADDRESS /proc/"+pid+"/environ|cut -d= -f2-"
+    os.environ["DBUS_SESSION_BUS_ADDRESS"] = subprocess.check_output(
+        ['/bin/bash', '-c', cmd]).decode("utf-8").strip().replace("\0", "")
 
 if __name__ == '__main__':
     main()
