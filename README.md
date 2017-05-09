@@ -8,3 +8,7 @@ and set it as a background.
   ```shell
   0 0 * * * /path/of/script/daily_background.py
   ```
+  
+## Upcoming Changes
+* Identify image formats and add them to the file name
+* Download images hosted on imgur(Currently, images hosted on reddit are downloaded)
