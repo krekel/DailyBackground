@@ -3,6 +3,7 @@ import getpass
 import os
 import re
 import subprocess
+import sys
 
 import praw
 import requests
@@ -34,15 +35,23 @@ def main():
             title = regex.sub('_', submission.title).lower()
             break
     print(title.replace('<\s>', '_'))
-    image = requests.get(url).content
 
-    # TODO add image extension to title
+    try:
+        r = requests.get(url)
+    except requests.RequestException as e:
+        print(e)
+        sys.exit(1)
+    else:
+        image_format = r.headers['Content-Type'].replace('image/jpeg', 'jpg').replace('image/png', 'png')
+        image = r.content
+        title = title + '.' + image_format
+
+    print('Image title: ', title)
 
     with open(file_path + title, 'wb') as f:
         f.write(image)
 
     set_envir()
-
     os.system("gsettings set org.gnome.desktop.background picture-uri "
               "file:///home/" + getpass.getuser() + "/Pictures/reddit_wp/" + title)
 
