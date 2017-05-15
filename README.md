@@ -10,5 +10,4 @@ and set it as a background.
   ```
   
 ## Upcoming Changes
-* Download images hosted on imgur(Currently, images hosted on reddit are downloaded)
 * Space manager for the wallpapers' directory
