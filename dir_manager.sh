@@ -2,7 +2,7 @@
 
 # default
 SIZEGB=1
-SIZEMB=20000
+SIZEMB=1000000
 
 manageDir()
 {
